@@ -14,10 +14,10 @@
 
 //
 // What algorithm to use:
-//#define PROFREC
-//#define FASTWAY
-//#define PROFREC2
-//#define DYNAPR
+#define PROFREC
+#define FASTWAY
+#define PROFREC2
+#define DYNAPR
 //
 // static configuration
 //
@@ -417,6 +417,12 @@ int main(int argc,char *argv[argc + 1])
         make_custom_pdf_file(file_name,final_position,&max_road_speed[0],solution_1_best.n_moves,&solution_1_best.positions[0],solution_1_elapsed_time,solution_1_count,"Plain recursion");
       }
       printf(" %3d %16lu %9.3e |",solution_1_best.n_moves,solution_1_count,solution_1_elapsed_time);
+      FILE *fp1;
+      char file_name1[64];
+      sprintf(file_name1,"results_1_%s.txt",argv[1]);
+      fp1 = fopen(file_name1, "w+");
+      fprintf(fp1, "%d %f\n", final_position, solution_1_elapsed_time);
+      fclose(fp1);
     }
     else
     {
@@ -434,6 +440,12 @@ int main(int argc,char *argv[argc + 1])
           make_custom_pdf_file(file_name,final_position,&max_road_speed[0],solution_2_best.n_moves,&solution_2_best.positions[0],solution_2_elapsed_time,solution_2_count,"Fastest Way Possible");
         }
         printf(" %3d %16lu %9.3e |",solution_2_best.n_moves,solution_2_count,solution_2_elapsed_time);
+        FILE *fp2;
+        char file_name2[64];
+        sprintf(file_name2,"results_2_%s.txt",argv[1]);
+        fp2 = fopen(file_name2, "a");
+        fprintf(fp2, "%d %f\n", final_position, solution_2_elapsed_time);
+        fclose(fp2);
     #endif
 
     #ifdef PROFREC2
@@ -446,10 +458,16 @@ int main(int argc,char *argv[argc + 1])
         make_custom_pdf_file(file_name,final_position,&max_road_speed[0],solution_3_best.n_moves,&solution_3_best.positions[0],solution_3_elapsed_time,solution_3_count,"Plain recursion 2.0");
       }
       printf(" %3d %16lu %9.3e |",solution_3_best.n_moves,solution_3_count,solution_3_elapsed_time);
+      FILE *fp3;
+      char file_name3[64];
+      sprintf(file_name3,"results_3_%s.txt",argv[1]);
+      fp3 = fopen(file_name3, "a");
+      fprintf(fp3, "%d %f\n", final_position, solution_3_elapsed_time);
+      fclose(fp3);
     }
     else
     {
-      solution_1_best.n_moves = -1;
+      solution_3_best.n_moves = -1;
       printf("                                |");
     }
     #endif
@@ -461,8 +479,14 @@ int main(int argc,char *argv[argc + 1])
           make_custom_pdf_file(file_name,final_position,&max_road_speed[0],solution_4_best.n_moves,&solution_4_best.positions[0],solution_4_elapsed_time,solution_4_count,"Dynamic Approach");
         }
         printf(" %3d %16lu %9.3e |",solution_4_best.n_moves,solution_4_count,solution_4_elapsed_time);
+      FILE *fp4;
+      char file_name4[64];
+      sprintf(file_name4,"results_4_%s.txt",argv[1]);
+      fp4 = fopen(file_name4, "a");
+      fprintf(fp4, "%d %f\n", final_position, solution_4_elapsed_time);
+      fclose(fp4);
     #endif
-    // done
+    // done-
     printf("\n");
     fflush(stdout);
     // new final_position
