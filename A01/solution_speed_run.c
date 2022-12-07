@@ -396,16 +396,27 @@ int main(int argc,char *argv[argc + 1])
   // run all solution methods for all interesting sizes of the problem
   final_position = 1;
   solution_1_elapsed_time = 0.0;
-  printf("    + --- ---------------- --------- +\n");
-  printf("    |                plain recursion |\n");
-  printf("--- + --- ---------------- --------- +\n");
-  printf("  n | sol            count  cpu time |\n");
-  printf("--- + --- ---------------- --------- +\n");
+  FILE *fpfinal;
+  char fpfinalName[64];
+  sprintf(fpfinalName,"results.txt");
+  fpfinal = fopen(fpfinalName, "a");
+  fprintf(fpfinal, "    + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- +\n");
+  fprintf(fpfinal, "    |                Plain Recursive |            Plain Recursive 2.0 |             Student's Solution |               Dynamic Approach |\n");
+  fprintf(fpfinal, "--- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- +\n");
+  fprintf(fpfinal, "  n | sol            count  cpu time | sol            count  cpu time | sol            count  cpu time | sol            count  cpu time |\n");  
+  fprintf(fpfinal, "--- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- +\n");
+  printf("    + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- +\n");
+  printf("    |                Plain Recursive |            Plain Recursive 2.0 |             Student's Solution |               Dynamic Approach |\n");
+  printf("--- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- +\n");
+  printf("  n | sol            count  cpu time | sol            count  cpu time | sol            count  cpu time | sol            count  cpu time |\n");
+  printf("--- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- + --- ---------------- --------- +\n");
   while(final_position <= _max_road_size_/* && final_position <= 20*/)
   {
     
     print_this_one = (final_position == 10 || final_position == 20 || final_position == 50 || final_position == 100 || final_position == 200 || final_position == 400 || final_position == 800) ? 1 : 0;
     printf("%3d |",final_position);
+    fprintf(fpfinal,"%3d |",final_position);
+
     // first solution method (very bad)
     #ifdef PROFREC
     if(solution_1_elapsed_time < _time_limit_)
@@ -417,11 +428,12 @@ int main(int argc,char *argv[argc + 1])
         make_custom_pdf_file(file_name,final_position,&max_road_speed[0],solution_1_best.n_moves,&solution_1_best.positions[0],solution_1_elapsed_time,solution_1_count,"Plain recursion");
       }
       printf(" %3d %16lu %9.3e |",solution_1_best.n_moves,solution_1_count,solution_1_elapsed_time);
+      fprintf(fpfinal, " %3d %16lu %9.3e |",solution_1_best.n_moves,solution_1_count,solution_1_elapsed_time);
       FILE *fp1;
       char file_name1[64];
       sprintf(file_name1,"results_1_%s.txt",argv[1]);
-      fp1 = fopen(file_name1, "w+");
-      fprintf(fp1, "%d %f\n", final_position, solution_1_elapsed_time);
+      fp1 = fopen(file_name1, "a");
+      fprintf(fp1, "%d %f %ld\n", final_position, solution_1_elapsed_time, solution_1_count);
       fclose(fp1);
     }
     else
@@ -437,14 +449,16 @@ int main(int argc,char *argv[argc + 1])
       if(print_this_one != 0)
         {
           sprintf(file_name,"%03d_2_%s.pdf",final_position,argv[1]);
-          make_custom_pdf_file(file_name,final_position,&max_road_speed[0],solution_2_best.n_moves,&solution_2_best.positions[0],solution_2_elapsed_time,solution_2_count,"Fastest Way Possible");
+          make_custom_pdf_file(file_name,final_position,&max_road_speed[0],solution_2_best.n_moves,&solution_2_best.positions[0],solution_2_elapsed_time,solution_2_count,"Student's Approach");
         }
         printf(" %3d %16lu %9.3e |",solution_2_best.n_moves,solution_2_count,solution_2_elapsed_time);
+        fprintf(fpfinal, " %3d %16lu %9.3e |",solution_2_best.n_moves,solution_2_count,solution_2_elapsed_time);
+        
         FILE *fp2;
         char file_name2[64];
         sprintf(file_name2,"results_2_%s.txt",argv[1]);
         fp2 = fopen(file_name2, "a");
-        fprintf(fp2, "%d %f\n", final_position, solution_2_elapsed_time);
+        fprintf(fp2, "%d %f %ld\n", final_position, solution_2_elapsed_time, solution_2_count);
         fclose(fp2);
     #endif
 
@@ -458,11 +472,12 @@ int main(int argc,char *argv[argc + 1])
         make_custom_pdf_file(file_name,final_position,&max_road_speed[0],solution_3_best.n_moves,&solution_3_best.positions[0],solution_3_elapsed_time,solution_3_count,"Plain recursion 2.0");
       }
       printf(" %3d %16lu %9.3e |",solution_3_best.n_moves,solution_3_count,solution_3_elapsed_time);
+      fprintf(fpfinal, " %3d %16lu %9.3e |",solution_3_best.n_moves,solution_3_count,solution_3_elapsed_time);
       FILE *fp3;
       char file_name3[64];
       sprintf(file_name3,"results_3_%s.txt",argv[1]);
       fp3 = fopen(file_name3, "a");
-      fprintf(fp3, "%d %f\n", final_position, solution_3_elapsed_time);
+      fprintf(fp3, "%d %f %ld\n", final_position, solution_3_elapsed_time, solution_3_count);
       fclose(fp3);
     }
     else
@@ -478,17 +493,20 @@ int main(int argc,char *argv[argc + 1])
           sprintf(file_name,"%03d_4_%s.pdf",final_position,argv[1]);
           make_custom_pdf_file(file_name,final_position,&max_road_speed[0],solution_4_best.n_moves,&solution_4_best.positions[0],solution_4_elapsed_time,solution_4_count,"Dynamic Approach");
         }
-        printf(" %3d %16lu %9.3e |",solution_4_best.n_moves,solution_4_count,solution_4_elapsed_time);
+      printf(" %3d %16lu %9.3e |",solution_4_best.n_moves,solution_4_count,solution_4_elapsed_time);
+      fprintf(fpfinal, " %3d %16lu %9.3e |",solution_4_best.n_moves,solution_4_count,solution_4_elapsed_time);
       FILE *fp4;
       char file_name4[64];
       sprintf(file_name4,"results_4_%s.txt",argv[1]);
       fp4 = fopen(file_name4, "a");
-      fprintf(fp4, "%d %f\n", final_position, solution_4_elapsed_time);
+      fprintf(fp4, "%d %f %ld\n", final_position, solution_4_elapsed_time, solution_4_count);
       fclose(fp4);
     #endif
     // done-
+    fprintf(fpfinal, "\n");
     printf("\n");
     fflush(stdout);
+    fflush(fpfinal);
     // new final_position
     if(final_position < 50)
       final_position += 1;
@@ -499,7 +517,9 @@ int main(int argc,char *argv[argc + 1])
     else
       final_position += 20;
   }
+  
   printf("--- + --- ---------------- --------- + --- ---------------- --------- \n");
+  fclose(fpfinal);
   return 0;
 # undef _time_limit_
 }
